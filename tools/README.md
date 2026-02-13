@@ -1,6 +1,6 @@
 # Tools Directory
 
-This directory contains the modular installation scripts used by `env-forge`.
+This directory contains the modular installation scripts used by `envforge`.
 
 ## How to Add a New Tool
 

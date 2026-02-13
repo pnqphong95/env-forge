@@ -148,7 +148,7 @@ Easy to add new capabilities:
 ## File Organization
 
 ```
-env-forge/
+envforge/
 ├── envforge              # CLI entry point
 ├── bootstrap-init.sh     # Remote installation script
 ├── bundles/              # Bundle definitions (YAML)

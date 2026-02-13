@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# core.sh - Core installation functions for env-forge
+# core.sh - Core installation functions for envforge
 # This library contains bundle resolution, state management, and app execution logic
 
 # Resolve bundle dependencies
@@ -164,8 +164,8 @@ resolve_bundle_path() {
     fi
 }
 
-# Upgrade env-forge to latest version
-# Upgrade env-forge to latest version or specific tag
+# Upgrade envforge to latest version
+# Upgrade envforge to latest version or specific tag
 upgrade_envforge() {
     local target_version="$1"
     

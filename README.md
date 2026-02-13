@@ -25,7 +25,7 @@ This project provides a flexible scaffolding framework for multiple purposes:
 
 ## Quick Install (Recommended)
 
-Install env-forge globally with one command:
+Install envforge globally with one command:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/master/bootstrap-init.sh | bash
@@ -41,7 +41,7 @@ After installation, restart your terminal or run:
 source ~/.bashrc  # or ~/.zshrc for zsh
 ```
 
-Then use env-forge from anywhere:
+Then use envforge from anywhere:
 ```bash
 envforge --list       # Show available tools
 envforge              # Install default bundle
@@ -53,8 +53,8 @@ envforge --help       # Show all options
 For development or if you prefer cloning manually:
 
 ```bash
-git clone https://github.com/pnqphong95/envforge.git ~/.env-forge
-cd ~/.env-forge
+git clone https://github.com/pnqphong95/envforge.git ~/.envforge
+cd ~/.envforge
 chmod +x envforge
 chmod +x lib/*.sh lib/*.py
 chmod +x tools/*.sh
@@ -92,7 +92,7 @@ envforge up --reset-state         # Clear state for bundle
 ### Direct Execution (Development)
 
 ```bash
-cd ~/.env-forge
+cd ~/.envforge
 ./envforge up --list
 ./envforge up
 ```
@@ -100,7 +100,7 @@ cd ~/.env-forge
 ## Directory Structure
 
 ```
-env-forge/
+envforge/
 ├── envforge                # Main executable - the entrypoint
 ├── bootstrap-init.sh       # Remote installation script
 ├── bundles/                # Bundle definitions (YAML)

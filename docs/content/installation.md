@@ -104,11 +104,8 @@ envforge --help
 If you get `envforge: command not found`, ensure the PATH is set correctly:
 
 ```bash
-# Check if ~/.envforge exists
-ls -la ~/.envforge
-
-# Add to PATH manually
-echo 'export PATH="$HOME/.env-forge:$PATH"' >> ~/.bashrc
+# The script installs envforge to `~/.envforge` and adds it to your shell's PATH.
+echo 'export PATH="$HOME/.envforge:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 

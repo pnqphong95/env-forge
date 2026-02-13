@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # envforge - Universal Environment Scaffolding
-# Main entrypoint for env-forge
+# Main entrypoint for envforge
 
 set -e  # Exit on error
 
@@ -39,7 +39,7 @@ envforge - Universal Environment Scaffolding
 
 COMMANDS:
     up          Execute a bundle (default: bundles/default.yaml)
-    upgrade     Manage env-forge versions
+    upgrade     Manage envforge versions
     version     Show current version
     help        Show this help message
 

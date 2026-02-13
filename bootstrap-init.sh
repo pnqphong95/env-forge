@@ -7,7 +7,7 @@
 set -e  # Exit on error
 
 # Configuration
-INSTALL_DIR="$HOME/.env-forge"
+INSTALL_DIR="$HOME/.envforge"
 REPO_URL="https://github.com/pnqphong95/envforge.git"
 ENV_FORGE_VERSION="${ENV_FORGE_VERSION:-${1:-master}}" 
 
@@ -121,7 +121,7 @@ get_shell_rc() {
 is_path_configured() {
     local rc_file="$1"
     if [ -f "$rc_file" ]; then
-        grep -q "\.env-forge" "$rc_file" && return 0
+        grep -q "\.envforge" "$rc_file" && return 0
     fi
     return 1
 }
@@ -135,7 +135,7 @@ add_to_path() {
         return 0
     fi
     
-    log_info "Adding env-forge to PATH in $rc_file..."
+    log_info "Adding envforge to PATH in $rc_file..."
     
     cat << 'EOF' >> "$rc_file"
 
@@ -169,7 +169,7 @@ main() {
     
     # Check if already installed
     if [ -d "$INSTALL_DIR" ]; then
-        log_warning "env-forge is already installed at $INSTALL_DIR"
+        log_warning "envforge is already installed at $INSTALL_DIR"
         read -p "Do you want to reinstall? This will remove the existing installation. (y/N): " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -182,7 +182,7 @@ main() {
     fi
     
     # Clone repository
-    log_info "Cloning env-forge to $INSTALL_DIR..."
+    log_info "Cloning envforge to $INSTALL_DIR..."
     
     # Always clone master first to get the repo
     if ! git clone "$REPO_URL" "$INSTALL_DIR"; then

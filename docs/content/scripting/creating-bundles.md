@@ -51,7 +51,7 @@ tools:
 ### 1. Create Bundle File
 
 ```bash
-cd ~/.env-forge/bundles
+cd ~/.envforge/bundles
 touch mybundle.yaml
 ```
 

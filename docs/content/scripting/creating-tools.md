@@ -60,7 +60,7 @@ fi
 ### 1. Create the Script File
 
 ```bash
-cd ~/.env-forge/tools
+cd ~/.envforge/tools
 touch mytool.sh
 chmod +x mytool.sh
 ```
