@@ -9,7 +9,7 @@ Understanding EnvForge's directory structure helps you navigate the codebase and
 ## Root Directory
 
 ```
-env-forge/
+envforge/
 ├── envforge              # Main CLI executable
 ├── bootstrap-init.sh     # Remote installation script
 ├── .versions             # Current version file
@@ -30,7 +30,7 @@ The main entry point for all commands. This is a Bash script that:
 - Sources core libraries
 - Handles global flags
 
-**Location**: `/home/user/.env-forge/envforge`
+**Location**: `/home/user/.envforge/envforge`
 
 ### `bootstrap-init.sh`
 
@@ -212,7 +212,7 @@ envforge up --reset-state
 When installed via bootstrap script:
 
 ```
-~/.env-forge/             # Installation directory
+~/.envforge/             # Installation directory
 ~/.bashrc                 # PATH added here (or ~/.zshrc)
 ```
 
@@ -221,13 +221,13 @@ When installed via bootstrap script:
 When cloned manually:
 
 ```
-<any-directory>/env-forge/
+<any-directory>/envforge/
 ```
 
 You must manually add to PATH:
 
 ```bash
-export PATH="$HOME/.env-forge:$PATH"
+export PATH="$HOME/.envforge:$PATH"
 ```
 
 ## Adding Custom Content

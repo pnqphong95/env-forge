@@ -11,7 +11,7 @@ EnvForge can be installed in two ways: **Quick Install** (recommended) or **Manu
 Install EnvForge globally with one command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstrap-init.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/master/bootstrap-init.sh | bash
 ```
 
 ### Install Specific Version
@@ -19,7 +19,7 @@ curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstr
 For a specific version:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
+curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
 ```
 
 ### After Installation
@@ -43,8 +43,8 @@ For development or if you prefer cloning manually:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/pnqphong95/env-forge.git ~/.env-forge
-cd ~/.env-forge
+git clone https://github.com/pnqphong95/envforge.git ~/.envforge
+cd ~/.envforge
 ```
 
 ### 2. Set Permissions
@@ -65,7 +65,7 @@ chmod +x tools/*.sh
 ### 4. Add to PATH
 
 ```bash
-echo 'export PATH="$HOME/.env-forge:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.envforge:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -104,8 +104,8 @@ envforge --help
 If you get `envforge: command not found`, ensure the PATH is set correctly:
 
 ```bash
-# Check if ~/.env-forge exists
-ls -la ~/.env-forge
+# Check if ~/.envforge exists
+ls -la ~/.envforge
 
 # Add to PATH manually
 echo 'export PATH="$HOME/.env-forge:$PATH"' >> ~/.bashrc
@@ -117,9 +117,9 @@ source ~/.bashrc
 If you encounter permission errors:
 
 ```bash
-chmod +x ~/.env-forge/envforge
-chmod +x ~/.env-forge/lib/*.sh
-chmod +x ~/.env-forge/tools/*.sh
+chmod +x ~/.envforge/envforge
+chmod +x ~/.envforge/lib/*.sh
+chmod +x ~/.envforge/tools/*.sh
 ```
 
 ### Python Not Found

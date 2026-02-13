@@ -255,7 +255,7 @@ install() {
 Keep your customizations in git:
 
 ```bash
-cd ~/.env-forge
+cd ~/.envforge
 git add bundles/mybundle.yaml
 git add tools/mytool.sh
 git commit -m "Add custom bundle and tool"
@@ -332,7 +332,7 @@ install() {
 Study existing tools:
 
 ```bash
-cd ~/.env-forge/tools
+cd ~/.envforge/tools
 cat git.sh
 cat nodejs.sh
 cat docker.sh

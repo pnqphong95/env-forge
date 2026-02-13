@@ -174,12 +174,12 @@ upgrade_envforge() {
         return 0
     fi
 
-    log_info "Starting env-forge upgrade process..."
+    log_info "Starting envforge upgrade process..."
     
     # Check if we're in a git repository
     if ! git -C "$ENV_FORGE_HOME" rev-parse --git-dir > /dev/null 2>&1; then
-        log_error "env-forge installation is not a git repository. Cannot upgrade."
-        log_info "Please reinstall using: curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstrap-init.sh | bash"
+        log_error "envforge installation is not a git repository. Cannot upgrade."
+        log_info "Please reinstall using: curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/master/bootstrap-init.sh | bash"
         exit 1
     fi
     
@@ -193,7 +193,7 @@ upgrade_envforge() {
     # Read .versions file from remote URL
     log_info "Reading version information from remote..."
     local versions_content
-    local versions_url="https://raw.githubusercontent.com/pnqphong95/env-forge/master/.versions"
+    local versions_url="https://raw.githubusercontent.com/pnqphong95/envforge/master/.versions"
 
     if command -v curl &> /dev/null; then
         versions_content=$(curl -sSL "$versions_url" || true)

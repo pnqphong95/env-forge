@@ -28,12 +28,12 @@ This project provides a flexible scaffolding framework for multiple purposes:
 Install env-forge globally with one command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstrap-init.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/master/bootstrap-init.sh | bash
 ```
 
 For a specific version:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
+curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
 ```
 
 After installation, restart your terminal or run:
@@ -53,7 +53,7 @@ envforge --help       # Show all options
 For development or if you prefer cloning manually:
 
 ```bash
-git clone https://github.com/pnqphong95/env-forge.git ~/.env-forge
+git clone https://github.com/pnqphong95/envforge.git ~/.env-forge
 cd ~/.env-forge
 chmod +x envforge
 chmod +x lib/*.sh lib/*.py
@@ -64,7 +64,7 @@ chmod +x tools/*.sh
 
 Add to PATH manually:
 ```bash
-echo 'export PATH="$HOME/.env-forge:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.envforge:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 

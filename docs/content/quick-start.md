@@ -136,7 +136,7 @@ EnvForge tracks installation state to prevent redundant installations.
 State is stored in `.install_state/`:
 
 ```bash
-ls -la ~/.env-forge/.install_state/
+ls -la ~/.envforge/.install_state/
 ```
 
 ### Reset State
@@ -148,7 +148,7 @@ If you need to re-run installations:
 envforge up --env webdev --reset-state
 
 # Or manually delete state
-rm -rf ~/.env-forge/.install_state/webdev/
+rm -rf ~/.envforge/.install_state/webdev/
 ```
 
 ### Force Re-installation

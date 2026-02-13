@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# env-forge Bootstrap Installation Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstrap-init.sh | bash
-# Usage with version: curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
+# envforge Bootstrap Installation Script
+# Usage: curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/master/bootstrap-init.sh | bash
+# Usage with version: curl -fsSL https://raw.githubusercontent.com/pnqphong95/envforge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
 
 set -e  # Exit on error
 
 # Configuration
 INSTALL_DIR="$HOME/.env-forge"
-REPO_URL="https://github.com/pnqphong95/env-forge.git"
+REPO_URL="https://github.com/pnqphong95/envforge.git"
 ENV_FORGE_VERSION="${ENV_FORGE_VERSION:-${1:-master}}" 
 
 # Colors for output
@@ -139,8 +139,8 @@ add_to_path() {
     
     cat << 'EOF' >> "$rc_file"
 
-# env-forge - Universal Environment Scaffolding
-export PATH="$HOME/.env-forge:$PATH"
+# envforge - Universal Environment Scaffolding
+export PATH="$HOME/.envforge:$PATH"
 EOF
     
     log_success "Added to PATH in $rc_file"
@@ -150,7 +150,7 @@ EOF
 main() {
     echo ""
     log_info "==========================================="
-    log_info "  env-forge Bootstrap Installation"
+    log_info "  envforge Bootstrap Installation"
     log_info "==========================================="
     echo ""
     
@@ -193,7 +193,7 @@ main() {
     # If version is master (default), try to find latest stable from remote .versions
     if [ "$ENV_FORGE_VERSION" = "master" ]; then
         log_info "Fetching latest version information from remote..."
-        VERSIONS_URL="https://raw.githubusercontent.com/pnqphong95/env-forge/master/.versions"
+        VERSIONS_URL="https://raw.githubusercontent.com/pnqphong95/envforge/master/.versions"
         
         if command -v curl &> /dev/null; then
             VERSIONS_CONTENT=$(curl -sSL "$VERSIONS_URL" || true)
@@ -255,7 +255,7 @@ main() {
     
     echo ""
     log_success "==========================================="
-    log_success "  env-forge installed successfully!"
+    log_success "  envforge installed successfully!"
     log_success "==========================================="
     echo ""
     log_info "Installation location: $INSTALL_DIR"
@@ -264,7 +264,7 @@ main() {
     log_warning "IMPORTANT: Please restart your terminal or run:"
     log_info "  source $(get_shell_rc)"
     echo ""
-    log_info "Then you can use env-forge from anywhere:"
+    log_info "Then you can use envforge from anywhere:"
     log_info "  envforge --list       # Show available tools"
     log_info "  envforge              # Install default bundle"
     log_info "  envforge --help       # Show all options"

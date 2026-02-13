@@ -16,12 +16,12 @@ const config = {
     url: 'https://pnqphong95.github.io',
     // Set the /<baseUrl>/ pathname under which your site is served
     // For GitHub pages deployment, it is often '/<projectName>/'
-    baseUrl: '/env-forge/',
+    baseUrl: '/envforge/',
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
     organizationName: 'pnqphong95', // Usually your GitHub org/user name.
-    projectName: 'env-forge', // Usually your repo name.
+    projectName: 'envforge', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
@@ -45,7 +45,7 @@ const config = {
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
                     editUrl:
-                        'https://github.com/pnqphong95/env-forge/tree/master/docs/',
+                        'https://github.com/pnqphong95/envforge/tree/master/docs/',
                 },
                 blog: false,
                 theme: {
@@ -74,7 +74,7 @@ const config = {
                         label: 'Documentation',
                     },
                     {
-                        href: 'https://github.com/pnqphong95/env-forge',
+                        href: 'https://github.com/pnqphong95/envforge',
                         label: 'GitHub',
                         position: 'right',
                     },
@@ -101,7 +101,7 @@ const config = {
                         items: [
                             {
                                 label: 'GitHub',
-                                href: 'https://github.com/pnqphong95/env-forge',
+                                href: 'https://github.com/pnqphong95/envforge',
                             },
                         ],
                     },
