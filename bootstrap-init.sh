@@ -190,6 +190,34 @@ main() {
         exit 1
     fi
     
+    # If version is master (default), try to find latest stable from remote .versions
+    if [ "$ENV_FORGE_VERSION" = "master" ]; then
+        log_info "Fetching latest version information from remote..."
+        VERSIONS_URL="https://raw.githubusercontent.com/pnqphong95/env-forge/master/.versions"
+        
+        if command -v curl &> /dev/null; then
+            VERSIONS_CONTENT=$(curl -sSL "$VERSIONS_URL" || true)
+        elif command -v wget &> /dev/null; then
+            VERSIONS_CONTENT=$(wget -qO- "$VERSIONS_URL" || true)
+        else
+            log_warning "Neither curl nor wget found. Cannot fetch latest version."
+            VERSIONS_CONTENT=""
+        fi
+
+        if [ -n "$VERSIONS_CONTENT" ]; then
+            LATEST_VERSION=$(echo "$VERSIONS_CONTENT" | grep -v '^$' | tail -n 1)
+            
+            if [ -n "$LATEST_VERSION" ]; then
+                log_info "Found latest stable version: $LATEST_VERSION"
+                ENV_FORGE_VERSION="$LATEST_VERSION"
+            else
+                log_warning "Could not parse version from remote .versions file. Falling back to master."
+            fi
+        else
+             log_warning "Failed to fetch .versions file. Falling back to master."
+        fi
+    fi
+
     # Checkout specific version if not master
     if [ "$ENV_FORGE_VERSION" != "master" ]; then
         log_info "Checking out version: $ENV_FORGE_VERSION..."

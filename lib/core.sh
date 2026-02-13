@@ -182,12 +182,22 @@ upgrade_envforge() {
         exit 1
     fi
     
-    # Read .versions file from origin/master
+    # Read .versions file from remote URL
     log_info "Reading version information from remote..."
     local versions_content
-    if ! versions_content=$(git -C "$ENV_FORGE_HOME" show origin/master:.versions 2>/dev/null); then
-        log_error "Failed to read .versions file from remote master branch."
-        log_error "The .versions file may not exist in the remote repository."
+    local versions_url="https://raw.githubusercontent.com/pnqphong95/env-forge/master/.versions"
+
+    if command -v curl &> /dev/null; then
+        versions_content=$(curl -sSL "$versions_url" || true)
+    elif command -v wget &> /dev/null; then
+        versions_content=$(wget -qO- "$versions_url" || true)
+    else
+        log_error "Neither curl nor wget found. Cannot fetch latest version."
+        exit 1
+    fi
+
+    if [ -z "$versions_content" ]; then
+        log_error "Failed to read .versions file from remote URL."
         exit 1
     fi
     
