@@ -9,7 +9,7 @@ set -e  # Exit on error
 # Configuration
 INSTALL_DIR="$HOME/.env-forge"
 REPO_URL="https://github.com/pnqphong95/env-forge.git"
-VERSION="${1:-master}"  # Default to master if no version specified
+ENV_FORGE_VERSION="${ENV_FORGE_VERSION:-${1:-master}}" 
 
 # Colors for output
 RED='\033[0;31m'
@@ -182,17 +182,23 @@ main() {
     fi
     
     # Clone repository
-    log_info "Cloning env-forge ($VERSION) to $INSTALL_DIR..."
+    log_info "Cloning env-forge to $INSTALL_DIR..."
     
-    if [ "$VERSION" = "master" ]; then
-        git clone "$REPO_URL" "$INSTALL_DIR"
-    else
-        git clone --branch "$VERSION" "$REPO_URL" "$INSTALL_DIR"
-    fi
-    
-    if [ $? -ne 0 ]; then
+    # Always clone master first to get the repo
+    if ! git clone "$REPO_URL" "$INSTALL_DIR"; then
         log_error "Failed to clone repository"
         exit 1
+    fi
+    
+    # Checkout specific version if not master
+    if [ "$ENV_FORGE_VERSION" != "master" ]; then
+        log_info "Checking out version: $ENV_FORGE_VERSION..."
+        if ! git -C "$INSTALL_DIR" checkout "$ENV_FORGE_VERSION"; then
+            log_error "Failed to checkout version: $ENV_FORGE_VERSION"
+            log_info "Available versions (tags):"
+            git -C "$INSTALL_DIR" tag -l | head -n 10
+            exit 1
+        fi
     fi
     
     log_success "Repository cloned successfully"
@@ -211,13 +217,21 @@ main() {
     # Add to PATH
     add_to_path
     
+    # Reload source file to apply changes
+    local rc_file=$(get_shell_rc)
+    if [ -f "$rc_file" ]; then
+        log_info "Reloading source file $rc_file..."
+        # We use . instead of source for better compatibility, though in bash they are the same
+        . "$rc_file"
+    fi
+    
     echo ""
     log_success "==========================================="
     log_success "  env-forge installed successfully!"
     log_success "==========================================="
     echo ""
     log_info "Installation location: $INSTALL_DIR"
-    log_info "Version: $VERSION"
+    log_info "Version: $ENV_FORGE_VERSION"
     echo ""
     log_warning "IMPORTANT: Please restart your terminal or run:"
     log_info "  source $(get_shell_rc)"
