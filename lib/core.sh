@@ -163,3 +163,77 @@ resolve_bundle_path() {
         echo "$bundle_arg"
     fi
 }
+
+# Upgrade env-forge to latest version
+upgrade_envforge() {
+    log_info "Starting env-forge upgrade process..."
+    
+    # Check if we're in a git repository
+    if ! git -C "$ENV_FORGE_HOME" rev-parse --git-dir > /dev/null 2>&1; then
+        log_error "env-forge installation is not a git repository. Cannot upgrade."
+        log_info "Please reinstall using: curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstrap-init.sh | bash"
+        exit 1
+    fi
+    
+    # Fetch latest from origin
+    log_info "Fetching latest updates from remote..."
+    if ! git -C "$ENV_FORGE_HOME" fetch origin master --quiet 2>/dev/null; then
+        log_error "Failed to fetch updates from remote repository."
+        exit 1
+    fi
+    
+    # Read .versions file from origin/master
+    log_info "Reading version information from remote..."
+    local versions_content
+    if ! versions_content=$(git -C "$ENV_FORGE_HOME" show origin/master:.versions 2>/dev/null); then
+        log_error "Failed to read .versions file from remote master branch."
+        log_error "The .versions file may not exist in the remote repository."
+        exit 1
+    fi
+    
+    # Get latest version (last non-empty line)
+    local latest_version
+    latest_version=$(echo "$versions_content" | grep -v '^$' | tail -n 1)
+    
+    if [ -z "$latest_version" ]; then
+        log_error "No version found in .versions file."
+        exit 1
+    fi
+    
+    log_info "Latest available version: $latest_version"
+    
+    # Get current version/commit
+    local current_version
+    current_version=$(git -C "$ENV_FORGE_HOME" describe --tags --exact-match 2>/dev/null || git -C "$ENV_FORGE_HOME" rev-parse --short HEAD 2>/dev/null || echo "unknown")
+    
+    log_info "Current version: $current_version"
+    
+    # Check if already at latest version
+    if [ "$current_version" = "$latest_version" ]; then
+        log_success "Already at latest version ($latest_version). No upgrade needed."
+        return 0
+    fi
+    
+    # Fetch tags
+    log_info "Fetching tags..."
+    if ! git -C "$ENV_FORGE_HOME" fetch --tags --quiet 2>/dev/null; then
+        log_warning "Failed to fetch tags, but continuing..."
+    fi
+    
+    # Check if target version exists
+    if ! git -C "$ENV_FORGE_HOME" rev-parse "$latest_version" >/dev/null 2>&1; then
+        log_error "Version $latest_version does not exist in the repository."
+        exit 1
+    fi
+    
+    # Checkout the latest version
+    log_info "Upgrading to version $latest_version..."
+    if git -C "$ENV_FORGE_HOME" checkout "$latest_version" --quiet 2>/dev/null; then
+        log_success "Successfully upgraded to version $latest_version!"
+        log_info "Please restart your shell or run: source ~/.bashrc"
+    else
+        log_error "Failed to checkout version $latest_version."
+        log_error "You may have local changes. Please commit or stash them first."
+        exit 1
+    fi
+}

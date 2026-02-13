@@ -34,8 +34,12 @@ DEFAULT_BUNDLE="$BUNDLES_DIR/default.yaml"
 usage() {
     cat <<EOF
 Usage: envforge [OPTIONS] [BUNDLE_FILE]
+       envforge upgrade
 
 env-forge - Universal Environment Scaffolding
+
+COMMANDS:
+    upgrade             Upgrade env-forge to the latest version
 
 ARGUMENTS:
     BUNDLE_FILE         Path to the bundle YAML file (default: bundles/default.yaml)
@@ -55,6 +59,7 @@ EXAMPLES:
     envforge --list               # List tools in default bundle
     envforge --dry-run            # Show installation plan
     envforge --force              # Force re-installation
+    envforge upgrade              # Upgrade env-forge to latest version
 
 TOOL SCRIPTS:
     All tools are located in: $TOOLS_DIR
@@ -74,6 +79,10 @@ BUNDLE_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case $1 in
+        upgrade)
+            upgrade_envforge
+            exit 0
+            ;;
         --list|-l)
             SHOW_LIST=true
             shift
