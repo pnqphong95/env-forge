@@ -1,0 +1,123 @@
+#!/bin/bash
+
+# envforge - Universal Environment Scaffolding
+# Main entrypoint for env-forge
+
+set -e  # Exit on error
+
+# Detect installation directory
+# Priority: ENV_FORGE_HOME > script location
+if [ -n "$ENV_FORGE_HOME" ]; then
+    # Use environment variable if set (for global envforge command)
+    SCRIPT_DIR="$ENV_FORGE_HOME"
+else
+    # Use script's actual location (for direct execution)
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+
+TOOLS_DIR="$SCRIPT_DIR/tools"
+BUNDLES_DIR="$SCRIPT_DIR/bundles"
+STATE_DIR="$SCRIPT_DIR/.install_state"
+LIB_DIR="$SCRIPT_DIR/lib"
+
+# Export for child processes
+export ENV_FORGE_HOME="$SCRIPT_DIR"
+
+# Source utility functions
+source "$LIB_DIR/utils.sh"
+source "$LIB_DIR/core.sh"
+
+# Default bundle
+DEFAULT_BUNDLE="$BUNDLES_DIR/default.yaml"
+
+# Function to display usage
+usage() {
+    cat <<EOF
+Usage: envforge [OPTIONS] [BUNDLE_FILE]
+
+env-forge - Universal Environment Scaffolding
+
+ARGUMENTS:
+    BUNDLE_FILE         Path to the bundle YAML file (default: bundles/default.yaml)
+                        Can be absolute path or relative to current directory
+
+OPTIONS:
+    --list, -l          List tools in the bundle
+    --help, -h          Show this help message
+    --dry-run           Show what would be installed without actually installing
+    --force             Run all tools in bundle, ignoring completion state
+    --reset-state       Clear the state for the specified bundle
+
+EXAMPLES:
+    envforge                      # Install default bundle
+    envforge my-bundle.yaml       # Install custom bundle from current directory
+    envforge /path/to/bundle.yaml # Install bundle from absolute path
+    envforge --list               # List tools in default bundle
+    envforge --dry-run            # Show installation plan
+    envforge --force              # Force re-installation
+
+TOOL SCRIPTS:
+    All tools are located in: $TOOLS_DIR
+    Custom bundles can reference these tools from any location.
+
+DOCUMENTATION:
+    https://github.com/pnqphong95/env-forge
+EOF
+}
+
+# Parse command line arguments
+DRY_RUN=false
+SHOW_LIST=false
+FORCE_RUN=false
+RESET_STATE=false
+BUNDLE_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --list|-l)
+            SHOW_LIST=true
+            shift
+            ;;
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            export DRY_RUN=true # Export for subprocesses
+            shift
+            ;;
+        --force)
+            FORCE_RUN=true
+            shift
+            ;;
+        --reset-state)
+            RESET_STATE=true
+            shift
+            ;;
+        -*)
+            log_error "Unknown option: $1"
+            usage
+            exit 1
+            ;;
+        *)
+            BUNDLE_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Resolve bundle file path
+if [ ${#BUNDLE_ARGS[@]} -ge 1 ]; then
+    TARGET_BUNDLE=$(resolve_bundle_path "${BUNDLE_ARGS[0]}")
+else
+    TARGET_BUNDLE="$DEFAULT_BUNDLE"
+fi
+
+# Main execution
+if [ "$RESET_STATE" = true ]; then
+    reset_state "$TARGET_BUNDLE"
+    exit 0
+fi
+
+install_bundle "$TARGET_BUNDLE"

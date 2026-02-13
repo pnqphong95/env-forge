@@ -1,0 +1,19 @@
+name: "Default Bundle"
+description: "Standard development setup"
+tools:
+  - git:
+      # No dependencies
+  - http-tools:
+      # No dependencies
+  - build-essential:
+      # No dependencies
+  - software-properties:
+      # No dependencies
+  - set-mirrors:
+      depends_on: 
+        - http-tools  # Requires curl for mirror testing
+      skip: true  # Skip by default (Linux Mint specific)
+  - github-cli:
+      depends_on:
+        - http-tools  # Requires wget for repository setup
+      skip: true  # Skip by default (optional tool)

@@ -1,0 +1,233 @@
+#!/bin/bash
+
+# env-forge Bootstrap Installation Script
+# Usage: curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/master/bootstrap-init.sh | bash
+# Usage with version: curl -fsSL https://raw.githubusercontent.com/pnqphong95/env-forge/1.0.0/bootstrap-init.sh | bash -s 1.0.0
+
+set -e  # Exit on error
+
+# Configuration
+INSTALL_DIR="$HOME/.env-forge"
+REPO_URL="https://github.com/pnqphong95/env-forge.git"
+VERSION="${1:-master}"  # Default to master if no version specified
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Logging functions
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+log_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Check OS compatibility
+check_os() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        case "$ID" in
+            ubuntu|debian|linuxmint|pop)
+                log_success "Supported OS detected: $PRETTY_NAME"
+                return 0
+                ;;
+            *)
+                log_warning "Untested OS: $PRETTY_NAME"
+                log_info "This system is optimized for Debian/Ubuntu-based distributions."
+                ;;
+        esac
+    else
+        log_warning "Cannot determine OS"
+    fi
+}
+
+# Check for sudo access
+check_sudo() {
+    if ! sudo -n true 2>/dev/null; then
+        log_info "Checking sudo access..."
+        if ! sudo -v; then
+            log_error "sudo access required"
+            exit 1
+        fi
+    fi
+    log_success "sudo access confirmed"
+}
+
+# Check and install Python3
+check_python3() {
+    if command -v python3 &> /dev/null; then
+        local py_version=$(python3 --version 2>&1 | awk '{print $2}')
+        log_success "Python3 installed: $py_version"
+    else
+        log_warning "Python3 not found. Installing..."
+        sudo apt update
+        sudo apt install -y python3
+        log_success "Python3 installed"
+    fi
+}
+
+# Detect shell
+detect_shell() {
+    if [ -n "$BASH_VERSION" ]; then
+        echo "bash"
+    elif [ -n "$ZSH_VERSION" ]; then
+        echo "zsh"
+    else
+        # Fallback to checking SHELL variable
+        case "$SHELL" in
+            */bash)
+                echo "bash"
+                ;;
+            */zsh)
+                echo "zsh"
+                ;;
+            *)
+                echo "unknown"
+                ;;
+        esac
+    fi
+}
+
+# Get shell RC file
+get_shell_rc() {
+    local shell_type=$(detect_shell)
+    case "$shell_type" in
+        bash)
+            echo "$HOME/.bashrc"
+            ;;
+        zsh)
+            echo "$HOME/.zshrc"
+            ;;
+        *)
+            echo "$HOME/.profile"
+            ;;
+    esac
+}
+
+# Check if PATH is already configured
+is_path_configured() {
+    local rc_file="$1"
+    if [ -f "$rc_file" ]; then
+        grep -q "\.env-forge" "$rc_file" && return 0
+    fi
+    return 1
+}
+
+# Add to PATH
+add_to_path() {
+    local rc_file=$(get_shell_rc)
+    
+    if is_path_configured "$rc_file"; then
+        log_info "PATH already configured in $rc_file"
+        return 0
+    fi
+    
+    log_info "Adding env-forge to PATH in $rc_file..."
+    
+    cat << 'EOF' >> "$rc_file"
+
+# env-forge - Universal Environment Scaffolding
+export PATH="$HOME/.env-forge:$PATH"
+EOF
+    
+    log_success "Added to PATH in $rc_file"
+}
+
+# Main installation
+main() {
+    echo ""
+    log_info "==========================================="
+    log_info "  env-forge Bootstrap Installation"
+    log_info "==========================================="
+    echo ""
+    
+    # Check OS and sudo
+    check_os
+    check_sudo
+    echo ""
+    
+    # Check for git
+    if ! command -v git &> /dev/null; then
+        log_error "git is not installed. Please install git first:"
+        log_info "  Ubuntu/Debian: sudo apt install git"
+        log_info "  CentOS/RHEL: sudo yum install git"
+        exit 1
+    fi
+    
+    # Check if already installed
+    if [ -d "$INSTALL_DIR" ]; then
+        log_warning "env-forge is already installed at $INSTALL_DIR"
+        read -p "Do you want to reinstall? This will remove the existing installation. (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Removing existing installation..."
+            rm -rf "$INSTALL_DIR"
+        else
+            log_info "Installation cancelled."
+            exit 0
+        fi
+    fi
+    
+    # Clone repository
+    log_info "Cloning env-forge ($VERSION) to $INSTALL_DIR..."
+    
+    if [ "$VERSION" = "master" ]; then
+        git clone "$REPO_URL" "$INSTALL_DIR"
+    else
+        git clone --branch "$VERSION" "$REPO_URL" "$INSTALL_DIR"
+    fi
+    
+    if [ $? -ne 0 ]; then
+        log_error "Failed to clone repository"
+        exit 1
+    fi
+    
+    log_success "Repository cloned successfully"
+    
+    # Install Python3 if needed
+    log_info "Checking dependencies..."
+    check_python3
+    echo ""
+    
+    # Make scripts executable
+    log_info "Setting permissions..."
+    chmod +x "$INSTALL_DIR/envforge"
+    chmod +x "$INSTALL_DIR/lib/bundle_resolver.py"
+    chmod +x "$INSTALL_DIR"/tools/*.sh 2>/dev/null || true
+    
+    # Add to PATH
+    add_to_path
+    
+    echo ""
+    log_success "==========================================="
+    log_success "  env-forge installed successfully!"
+    log_success "==========================================="
+    echo ""
+    log_info "Installation location: $INSTALL_DIR"
+    log_info "Version: $VERSION"
+    echo ""
+    log_warning "IMPORTANT: Please restart your terminal or run:"
+    log_info "  source $(get_shell_rc)"
+    echo ""
+    log_info "Then you can use env-forge from anywhere:"
+    log_info "  envforge --list       # Show available tools"
+    log_info "  envforge              # Install default bundle"
+    log_info "  envforge --help       # Show all options"
+    echo ""
+}
+
+# Run main function
+main "$@"
